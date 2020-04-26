@@ -21,131 +21,255 @@
       <div class="center">
         <div class="fleet fleet-1">
         </div>
-        <div class="board">
-          <table class="board">
+        <div class="board playingBoard">
+          <h2>Playing board</h2>
+          <table class="boardTable">
             <tr class="row">
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
+              <td class="cell" data-row="0" data-column="0"></td>
+              <td class="cell" data-row="0" data-column="1"></td>
+              <td class="cell" data-row="0" data-column="2"></td>
+              <td class="cell" data-row="0" data-column="3"></td>
+              <td class="cell" data-row="0" data-column="4"></td>
+              <td class="cell" data-row="0" data-column="5"></td>
+              <td class="cell" data-row="0" data-column="6"></td>
+              <td class="cell" data-row="0" data-column="7"></td>
+              <td class="cell" data-row="0" data-column="8"></td>
+              <td class="cell" data-row="0" data-column="9"></td>
             </tr>
             <tr class="row">
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
+              <td class="cell fa" data-row="1" data-column="0"></td>
+              <td class="cell fa" data-row="1" data-column="1"></td>
+              <td class="cell fa" data-row="1" data-column="2"></td>
+              <td class="cell fa" data-row="1" data-column="3"></td>
+              <td class="cell fa" data-row="1" data-column="4"></td>
+              <td class="cell fa" data-row="1" data-column="5"></td>
+              <td class="cell fa" data-row="1" data-column="6"></td>
+              <td class="cell fa" data-row="1" data-column="7"></td>
+              <td class="cell fa" data-row="1" data-column="8"></td>
+              <td class="cell fa" data-row="1" data-column="9"></td>
             </tr>
             <tr class="row">
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
+              <td class="cell fa" data-row="2" data-column="0"></td>
+              <td class="cell fa" data-row="2" data-column="1"></td>
+              <td class="cell fa" data-row="2" data-column="2"></td>
+              <td class="cell fa" data-row="2" data-column="3"></td>
+              <td class="cell fa" data-row="2" data-column="4"></td>
+              <td class="cell fa" data-row="2" data-column="5"></td>
+              <td class="cell fa" data-row="2" data-column="6"></td>
+              <td class="cell fa" data-row="2" data-column="7"></td>
+              <td class="cell fa" data-row="2" data-column="8"></td>
+              <td class="cell fa" data-row="2" data-column="9"></td>
             </tr>
             <tr class="row">
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
+              <td class="cell fa" data-row="3" data-column="0"></td>
+              <td class="cell fa" data-row="3" data-column="1"></td>
+              <td class="cell fa" data-row="3" data-column="2"></td>
+              <td class="cell fa" data-row="3" data-column="3"></td>
+              <td class="cell fa" data-row="3" data-column="4"></td>
+              <td class="cell fa" data-row="3" data-column="5"></td>
+              <td class="cell fa" data-row="3" data-column="6"></td>
+              <td class="cell fa" data-row="3" data-column="7"></td>
+              <td class="cell fa" data-row="3" data-column="8"></td>
+              <td class="cell fa" data-row="3" data-column="9"></td>
             </tr>
             <tr class="row">
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
+              <td class="cell fa" data-row="4" data-column="0"></td>
+              <td class="cell fa" data-row="4" data-column="1"></td>
+              <td class="cell fa" data-row="4" data-column="2"></td>
+              <td class="cell fa" data-row="4" data-column="3"></td>
+              <td class="cell fa" data-row="4" data-column="4"></td>
+              <td class="cell fa" data-row="4" data-column="5"></td>
+              <td class="cell fa" data-row="4" data-column="6"></td>
+              <td class="cell fa" data-row="4" data-column="7"></td>
+              <td class="cell fa" data-row="4" data-column="8"></td>
+              <td class="cell fa" data-row="4" data-column="9"></td>
             </tr>
             <tr class="row">
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
+              <td class="cell fa" data-row="5" data-column="0"></td>
+              <td class="cell fa" data-row="5" data-column="1"></td>
+              <td class="cell fa" data-row="5" data-column="2"></td>
+              <td class="cell fa" data-row="5" data-column="3"></td>
+              <td class="cell fa" data-row="5" data-column="4"></td>
+              <td class="cell fa" data-row="5" data-column="5"></td>
+              <td class="cell fa" data-row="5" data-column="6"></td>
+              <td class="cell fa" data-row="5" data-column="7"></td>
+              <td class="cell fa" data-row="5" data-column="8"></td>
+              <td class="cell fa" data-row="5" data-column="9"></td>
             </tr>
             <tr class="row">
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
+              <td class="cell fa" data-row="6" data-column="0"></td>
+              <td class="cell fa" data-row="6" data-column="1"></td>
+              <td class="cell fa" data-row="6" data-column="2"></td>
+              <td class="cell fa" data-row="6" data-column="3"></td>
+              <td class="cell fa" data-row="6" data-column="4"></td>
+              <td class="cell fa" data-row="6" data-column="5"></td>
+              <td class="cell fa" data-row="6" data-column="6"></td>
+              <td class="cell fa" data-row="6" data-column="7"></td>
+              <td class="cell fa" data-row="6" data-column="8"></td>
+              <td class="cell fa" data-row="6" data-column="9"></td>
             </tr>
             <tr class="row">
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
+              <td class="cell fa" data-row="7" data-column="0"></td>
+              <td class="cell fa" data-row="7" data-column="1"></td>
+              <td class="cell fa" data-row="7" data-column="2"></td>
+              <td class="cell fa" data-row="7" data-column="3"></td>
+              <td class="cell fa" data-row="7" data-column="4"></td>
+              <td class="cell fa" data-row="7" data-column="5"></td>
+              <td class="cell fa" data-row="7" data-column="6"></td>
+              <td class="cell fa" data-row="7" data-column="7"></td>
+              <td class="cell fa" data-row="7" data-column="8"></td>
+              <td class="cell fa" data-row="7" data-column="9"></td>
             </tr>
             <tr class="row">
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
+              <td class="cell fa" data-row="8" data-column="0"></td>
+              <td class="cell fa" data-row="8" data-column="1"></td>
+              <td class="cell fa" data-row="8" data-column="2"></td>
+              <td class="cell fa" data-row="8" data-column="3"></td>
+              <td class="cell fa" data-row="8" data-column="4"></td>
+              <td class="cell fa" data-row="8" data-column="5"></td>
+              <td class="cell fa" data-row="8" data-column="6"></td>
+              <td class="cell fa" data-row="8" data-column="7"></td>
+              <td class="cell fa" data-row="8" data-column="8"></td>
+              <td class="cell fa" data-row="8" data-column="9"></td>
             </tr>
             <tr class="row">
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
-              <td class="cell"></td>
+              <td class="cell fa" data-row="9" data-column="0"></td>
+              <td class="cell fa" data-row="9" data-column="1"></td>
+              <td class="cell fa" data-row="9" data-column="2"></td>
+              <td class="cell fa" data-row="9" data-column="3"></td>
+              <td class="cell fa" data-row="9" data-column="4"></td>
+              <td class="cell fa" data-row="9" data-column="5"></td>
+              <td class="cell fa" data-row="9" data-column="6"></td>
+              <td class="cell fa" data-row="9" data-column="7"></td>
+              <td class="cell fa" data-row="9" data-column="8"></td>
+              <td class="cell fa" data-row="9" data-column="9"></td>
             </tr>
           </table>
         </div>
-        <div class="fleet fleet-2">
+        <div class="board yourboard">
+          <h2>Your ships</h2>
+          <table class="boardTable yourFleet">
+            <tr class="row">
+              <td class="cell" data-row="0" data-column="0"></td>
+              <td class="cell" data-row="0" data-column="1"></td>
+              <td class="cell" data-row="0" data-column="2"></td>
+              <td class="cell" data-row="0" data-column="3"></td>
+              <td class="cell" data-row="0" data-column="4"></td>
+              <td class="cell" data-row="0" data-column="5"></td>
+              <td class="cell" data-row="0" data-column="6"></td>
+              <td class="cell" data-row="0" data-column="7"></td>
+              <td class="cell" data-row="0" data-column="8"></td>
+              <td class="cell" data-row="0" data-column="9"></td>
+            </tr>
+            <tr class="row">
+              <td class="cell fa" data-row="1" data-column="0"></td>
+              <td class="cell fa" data-row="1" data-column="1"></td>
+              <td class="cell fa" data-row="1" data-column="2"></td>
+              <td class="cell fa" data-row="1" data-column="3"></td>
+              <td class="cell fa" data-row="1" data-column="4"></td>
+              <td class="cell fa" data-row="1" data-column="5"></td>
+              <td class="cell fa" data-row="1" data-column="6"></td>
+              <td class="cell fa" data-row="1" data-column="7"></td>
+              <td class="cell fa" data-row="1" data-column="8"></td>
+              <td class="cell fa" data-row="1" data-column="9"></td>
+            </tr>
+            <tr class="row">
+              <td class="cell fa" data-row="2" data-column="0"></td>
+              <td class="cell fa" data-row="2" data-column="1"></td>
+              <td class="cell fa" data-row="2" data-column="2"></td>
+              <td class="cell fa" data-row="2" data-column="3"></td>
+              <td class="cell fa" data-row="2" data-column="4"></td>
+              <td class="cell fa" data-row="2" data-column="5"></td>
+              <td class="cell fa" data-row="2" data-column="6"></td>
+              <td class="cell fa" data-row="2" data-column="7"></td>
+              <td class="cell fa" data-row="2" data-column="8"></td>
+              <td class="cell fa" data-row="2" data-column="9"></td>
+            </tr>
+            <tr class="row">
+              <td class="cell fa" data-row="3" data-column="0"></td>
+              <td class="cell fa" data-row="3" data-column="1"></td>
+              <td class="cell fa" data-row="3" data-column="2"></td>
+              <td class="cell fa" data-row="3" data-column="3"></td>
+              <td class="cell fa" data-row="3" data-column="4"></td>
+              <td class="cell fa" data-row="3" data-column="5"></td>
+              <td class="cell fa" data-row="3" data-column="6"></td>
+              <td class="cell fa" data-row="3" data-column="7"></td>
+              <td class="cell fa" data-row="3" data-column="8"></td>
+              <td class="cell fa" data-row="3" data-column="9"></td>
+            </tr>
+            <tr class="row">
+              <td class="cell fa" data-row="4" data-column="0"></td>
+              <td class="cell fa" data-row="4" data-column="1"></td>
+              <td class="cell fa" data-row="4" data-column="2"></td>
+              <td class="cell fa" data-row="4" data-column="3"></td>
+              <td class="cell fa" data-row="4" data-column="4"></td>
+              <td class="cell fa" data-row="4" data-column="5"></td>
+              <td class="cell fa" data-row="4" data-column="6"></td>
+              <td class="cell fa" data-row="4" data-column="7"></td>
+              <td class="cell fa" data-row="4" data-column="8"></td>
+              <td class="cell fa" data-row="4" data-column="9"></td>
+            </tr>
+            <tr class="row">
+              <td class="cell fa" data-row="5" data-column="0"></td>
+              <td class="cell fa" data-row="5" data-column="1"></td>
+              <td class="cell fa" data-row="5" data-column="2"></td>
+              <td class="cell fa" data-row="5" data-column="3"></td>
+              <td class="cell fa" data-row="5" data-column="4"></td>
+              <td class="cell fa" data-row="5" data-column="5"></td>
+              <td class="cell fa" data-row="5" data-column="6"></td>
+              <td class="cell fa" data-row="5" data-column="7"></td>
+              <td class="cell fa" data-row="5" data-column="8"></td>
+              <td class="cell fa" data-row="5" data-column="9"></td>
+            </tr>
+            <tr class="row">
+              <td class="cell fa" data-row="6" data-column="0"></td>
+              <td class="cell fa" data-row="6" data-column="1"></td>
+              <td class="cell fa" data-row="6" data-column="2"></td>
+              <td class="cell fa" data-row="6" data-column="3"></td>
+              <td class="cell fa" data-row="6" data-column="4"></td>
+              <td class="cell fa" data-row="6" data-column="5"></td>
+              <td class="cell fa" data-row="6" data-column="6"></td>
+              <td class="cell fa" data-row="6" data-column="7"></td>
+              <td class="cell fa" data-row="6" data-column="8"></td>
+              <td class="cell fa" data-row="6" data-column="9"></td>
+            </tr>
+            <tr class="row">
+              <td class="cell fa" data-row="7" data-column="0"></td>
+              <td class="cell fa" data-row="7" data-column="1"></td>
+              <td class="cell fa" data-row="7" data-column="2"></td>
+              <td class="cell fa" data-row="7" data-column="3"></td>
+              <td class="cell fa" data-row="7" data-column="4"></td>
+              <td class="cell fa" data-row="7" data-column="5"></td>
+              <td class="cell fa" data-row="7" data-column="6"></td>
+              <td class="cell fa" data-row="7" data-column="7"></td>
+              <td class="cell fa" data-row="7" data-column="8"></td>
+              <td class="cell fa" data-row="7" data-column="9"></td>
+            </tr>
+            <tr class="row">
+              <td class="cell fa" data-row="8" data-column="0"></td>
+              <td class="cell fa" data-row="8" data-column="1"></td>
+              <td class="cell fa" data-row="8" data-column="2"></td>
+              <td class="cell fa" data-row="8" data-column="3"></td>
+              <td class="cell fa" data-row="8" data-column="4"></td>
+              <td class="cell fa" data-row="8" data-column="5"></td>
+              <td class="cell fa" data-row="8" data-column="6"></td>
+              <td class="cell fa" data-row="8" data-column="7"></td>
+              <td class="cell fa" data-row="8" data-column="8"></td>
+              <td class="cell fa" data-row="8" data-column="9"></td>
+            </tr>
+            <tr class="row">
+              <td class="cell fa" data-row="9" data-column="0"></td>
+              <td class="cell fa" data-row="9" data-column="1"></td>
+              <td class="cell fa" data-row="9" data-column="2"></td>
+              <td class="cell fa" data-row="9" data-column="3"></td>
+              <td class="cell fa" data-row="9" data-column="4"></td>
+              <td class="cell fa" data-row="9" data-column="5"></td>
+              <td class="cell fa" data-row="9" data-column="6"></td>
+              <td class="cell fa" data-row="9" data-column="7"></td>
+              <td class="cell fa" data-row="9" data-column="8"></td>
+              <td class="cell fa" data-row="9" data-column="9"></td>
+            </tr>
+          </table>
         </div>
       </div>
     </div>
