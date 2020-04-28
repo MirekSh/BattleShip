@@ -10,6 +10,13 @@ const fleet1 = document.querySelector('.fleet-1');
 const yourFleet = document.querySelector('.yourFleet')
 const cells = document.querySelectorAll('.yourFleet .cell');
 const boardCells = document.querySelectorAll('.playingBoard .cell');
+const login = document.querySelector('.login');
+let visible = false;
+
+login.addEventListener('click', () => {
+    document.querySelector('.popup').style.display = !visible ? 'flex' : 'none';
+    visible = !visible;
+})
 
 const fleet = SHIPS.reduce((fl, ship) => fl += `<p class="name"><span>${ship.name}</span> x ${ship.number}</p>
         <p class="size">Size: ${ship.size} <img src="./media/${ship.name.toLowerCase()}.png" alt="${ship.name}-img" /> </p>`, ''
