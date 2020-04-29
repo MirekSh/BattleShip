@@ -217,11 +217,10 @@ button:hover {
   height: 100%;
   position: absolute;
   top: 100px;
-  display: none;
   justify-content: center;
 }
 
-.popup-content {
+.popupContent {
   height: 250px;
   width: 500px;
   background: #fff;
@@ -231,7 +230,11 @@ button:hover {
   border: 2px solid #000000;
 }
 
-.popup-content > input, .popup-content > button {
+.signPopup, .logiInPopup {
+  display: none;
+}
+
+.popupContent > input, .popupContent > button {
   margin: 20px auto;
   display: block;
   width: 50%;

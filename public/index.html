@@ -1,288 +1,321 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>BattleShip</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="style.css" />
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/7.14.1/firebase-app.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/7.14.1/firebase-auth.js"></script>
-    <script defer src="/__/firebase/7.14.1/firebase-database.js"></script>
-    <script defer src="/__/firebase/7.14.1/firebase-messaging.js"></script>
-    <script defer src="/__/firebase/7.14.1/firebase-storage.js"></script>
-    <!-- initialize the SDK after all desired features are loaded -->
-    <script defer src="/__/firebase/init.js"></script>
-  </head>
-  <body>
-    <nav>
-      <button class="login">Login</button>
-      <div class="popup">
-        <div class="popup-content">
-          <input type="email" placeholder="Email">
-          <input type="password" placeholder="Password">
-          <button>Login</button>
-        </div>
-      </div>
-    </nav>
-    <div class="container">
-      <div class="center">
-        <div class="fleet fleet-1">
-        </div>
-        <div class="board playingBoard">
-          <h2>Playing board</h2>
-          <table class="boardTable">
-            <tr class="row">
-              <td class="cell fa fa-2x" data-row="0" data-column="1"></td>
-              <td class="cell fa fa-2x" data-row="0" data-column="0"></td>
-              <td class="cell fa fa-2x" data-row="0" data-column="2"></td>
-              <td class="cell fa fa-2x" data-row="0" data-column="3"></td>
-              <td class="cell fa fa-2x" data-row="0" data-column="4"></td>
-              <td class="cell fa fa-2x" data-row="0" data-column="5"></td>
-              <td class="cell fa fa-2x" data-row="0" data-column="6"></td>
-              <td class="cell fa fa-2x" data-row="0" data-column="7"></td>
-              <td class="cell fa fa-2x" data-row="0" data-column="8"></td>
-              <td class="cell fa fa-2x" data-row="0" data-column="9"></td>
-            </tr>
-            <tr class="row">
-              <td class="cell fa fa-2x" data-row="1" data-column="0"></td>
-              <td class="cell fa fa-2x" data-row="1" data-column="1"></td>
-              <td class="cell fa fa-2x" data-row="1" data-column="2"></td>
-              <td class="cell fa fa-2x" data-row="1" data-column="3"></td>
-              <td class="cell fa fa-2x" data-row="1" data-column="4"></td>
-              <td class="cell fa fa-2x" data-row="1" data-column="5"></td>
-              <td class="cell fa fa-2x" data-row="1" data-column="6"></td>
-              <td class="cell fa fa-2x" data-row="1" data-column="7"></td>
-              <td class="cell fa fa-2x" data-row="1" data-column="8"></td>
-              <td class="cell fa fa-2x" data-row="1" data-column="9"></td>
-            </tr>
-            <tr class="row">
-              <td class="cell fa fa-2x" data-row="2" data-column="0"></td>
-              <td class="cell fa fa-2x" data-row="2" data-column="1"></td>
-              <td class="cell fa fa-2x" data-row="2" data-column="2"></td>
-              <td class="cell fa fa-2x" data-row="2" data-column="3"></td>
-              <td class="cell fa fa-2x" data-row="2" data-column="4"></td>
-              <td class="cell fa fa-2x" data-row="2" data-column="5"></td>
-              <td class="cell fa fa-2x" data-row="2" data-column="6"></td>
-              <td class="cell fa fa-2x" data-row="2" data-column="7"></td>
-              <td class="cell fa fa-2x" data-row="2" data-column="8"></td>
-              <td class="cell fa fa-2x" data-row="2" data-column="9"></td>
-            </tr>
-            <tr class="row">
-              <td class="cell fa fa-2x" data-row="3" data-column="0"></td>
-              <td class="cell fa fa-2x" data-row="3" data-column="1"></td>
-              <td class="cell fa fa-2x" data-row="3" data-column="2"></td>
-              <td class="cell fa fa-2x" data-row="3" data-column="3"></td>
-              <td class="cell fa fa-2x" data-row="3" data-column="4"></td>
-              <td class="cell fa fa-2x" data-row="3" data-column="5"></td>
-              <td class="cell fa fa-2x" data-row="3" data-column="6"></td>
-              <td class="cell fa fa-2x" data-row="3" data-column="7"></td>
-              <td class="cell fa fa-2x" data-row="3" data-column="8"></td>
-              <td class="cell fa fa-2x" data-row="3" data-column="9"></td>
-            </tr>
-            <tr class="row">
-              <td class="cell fa fa-2x" data-row="4" data-column="0"></td>
-              <td class="cell fa fa-2x" data-row="4" data-column="1"></td>
-              <td class="cell fa fa-2x" data-row="4" data-column="2"></td>
-              <td class="cell fa fa-2x" data-row="4" data-column="3"></td>
-              <td class="cell fa fa-2x" data-row="4" data-column="4"></td>
-              <td class="cell fa fa-2x" data-row="4" data-column="5"></td>
-              <td class="cell fa fa-2x" data-row="4" data-column="6"></td>
-              <td class="cell fa fa-2x" data-row="4" data-column="7"></td>
-              <td class="cell fa fa-2x" data-row="4" data-column="8"></td>
-              <td class="cell fa fa-2x" data-row="4" data-column="9"></td>
-            </tr>
-            <tr class="row">
-              <td class="cell fa fa-2x" data-row="5" data-column="0"></td>
-              <td class="cell fa fa-2x" data-row="5" data-column="1"></td>
-              <td class="cell fa fa-2x" data-row="5" data-column="2"></td>
-              <td class="cell fa fa-2x" data-row="5" data-column="3"></td>
-              <td class="cell fa fa-2x" data-row="5" data-column="4"></td>
-              <td class="cell fa fa-2x" data-row="5" data-column="5"></td>
-              <td class="cell fa fa-2x" data-row="5" data-column="6"></td>
-              <td class="cell fa fa-2x" data-row="5" data-column="7"></td>
-              <td class="cell fa fa-2x" data-row="5" data-column="8"></td>
-              <td class="cell fa fa-2x" data-row="5" data-column="9"></td>
-            </tr>
-            <tr class="row">
-              <td class="cell fa fa-2x" data-row="6" data-column="0"></td>
-              <td class="cell fa fa-2x" data-row="6" data-column="1"></td>
-              <td class="cell fa fa-2x" data-row="6" data-column="2"></td>
-              <td class="cell fa fa-2x" data-row="6" data-column="3"></td>
-              <td class="cell fa fa-2x" data-row="6" data-column="4"></td>
-              <td class="cell fa fa-2x" data-row="6" data-column="5"></td>
-              <td class="cell fa fa-2x" data-row="6" data-column="6"></td>
-              <td class="cell fa fa-2x" data-row="6" data-column="7"></td>
-              <td class="cell fa fa-2x" data-row="6" data-column="8"></td>
-              <td class="cell fa fa-2x" data-row="6" data-column="9"></td>
-            </tr>
-            <tr class="row">
-              <td class="cell fa fa-2x" data-row="7" data-column="0"></td>
-              <td class="cell fa fa-2x" data-row="7" data-column="1"></td>
-              <td class="cell fa fa-2x" data-row="7" data-column="2"></td>
-              <td class="cell fa fa-2x" data-row="7" data-column="3"></td>
-              <td class="cell fa fa-2x" data-row="7" data-column="4"></td>
-              <td class="cell fa fa-2x" data-row="7" data-column="5"></td>
-              <td class="cell fa fa-2x" data-row="7" data-column="6"></td>
-              <td class="cell fa fa-2x" data-row="7" data-column="7"></td>
-              <td class="cell fa fa-2x" data-row="7" data-column="8"></td>
-              <td class="cell fa fa-2x" data-row="7" data-column="9"></td>
-            </tr>
-            <tr class="row">
-              <td class="cell fa fa-2x" data-row="8" data-column="0"></td>
-              <td class="cell fa fa-2x" data-row="8" data-column="1"></td>
-              <td class="cell fa fa-2x" data-row="8" data-column="2"></td>
-              <td class="cell fa fa-2x" data-row="8" data-column="3"></td>
-              <td class="cell fa fa-2x" data-row="8" data-column="4"></td>
-              <td class="cell fa fa-2x" data-row="8" data-column="5"></td>
-              <td class="cell fa fa-2x" data-row="8" data-column="6"></td>
-              <td class="cell fa fa-2x" data-row="8" data-column="7"></td>
-              <td class="cell fa fa-2x" data-row="8" data-column="8"></td>
-              <td class="cell fa fa-2x" data-row="8" data-column="9"></td>
-            </tr>
-            <tr class="row">
-              <td class="cell fa fa-2x" data-row="9" data-column="0"></td>
-              <td class="cell fa fa-2x" data-row="9" data-column="1"></td>
-              <td class="cell fa fa-2x" data-row="9" data-column="2"></td>
-              <td class="cell fa fa-2x" data-row="9" data-column="3"></td>
-              <td class="cell fa fa-2x" data-row="9" data-column="4"></td>
-              <td class="cell fa fa-2x" data-row="9" data-column="5"></td>
-              <td class="cell fa fa-2x" data-row="9" data-column="6"></td>
-              <td class="cell fa fa-2x" data-row="9" data-column="7"></td>
-              <td class="cell fa fa-2x" data-row="9" data-column="8"></td>
-              <td class="cell fa fa-2x" data-row="9" data-column="9"></td>
-            </tr>
-          </table>
-        </div>
-        <div class="board yourboard">
-          <h2>Your ships</h2>
-          <table class="boardTable yourFleet">
-            <tr class="row">
-              <td class="cell fa fa-2x" data-row="0" data-column="0"></td>
-              <td class="cell fa fa-2x" data-row="0" data-column="1"></td>
-              <td class="cell fa fa-2x" data-row="0" data-column="2"></td>
-              <td class="cell fa fa-2x" data-row="0" data-column="3"></td>
-              <td class="cell fa fa-2x" data-row="0" data-column="4"></td>
-              <td class="cell fa fa-2x" data-row="0" data-column="5"></td>
-              <td class="cell fa fa-2x" data-row="0" data-column="6"></td>
-              <td class="cell fa fa-2x" data-row="0" data-column="7"></td>
-              <td class="cell fa fa-2x" data-row="0" data-column="8"></td>
-              <td class="cell fa fa-2x" data-row="0" data-column="9"></td>
-            </tr>
-            <tr class="row">
-              <td class="cell fa fa-2x" data-row="1" data-column="0"></td>
-              <td class="cell fa fa-2x" data-row="1" data-column="1"></td>
-              <td class="cell fa fa-2x" data-row="1" data-column="2"></td>
-              <td class="cell fa fa-2x" data-row="1" data-column="3"></td>
-              <td class="cell fa fa-2x" data-row="1" data-column="4"></td>
-              <td class="cell fa fa-2x" data-row="1" data-column="5"></td>
-              <td class="cell fa fa-2x" data-row="1" data-column="6"></td>
-              <td class="cell fa fa-2x" data-row="1" data-column="7"></td>
-              <td class="cell fa fa-2x" data-row="1" data-column="8"></td>
-              <td class="cell fa fa-2x" data-row="1" data-column="9"></td>
-            </tr>
-            <tr class="row">
-              <td class="cell fa fa-2x" data-row="2" data-column="0"></td>
-              <td class="cell fa fa-2x" data-row="2" data-column="1"></td>
-              <td class="cell fa fa-2x" data-row="2" data-column="2"></td>
-              <td class="cell fa fa-2x" data-row="2" data-column="3"></td>
-              <td class="cell fa fa-2x" data-row="2" data-column="4"></td>
-              <td class="cell fa fa-2x" data-row="2" data-column="5"></td>
-              <td class="cell fa fa-2x" data-row="2" data-column="6"></td>
-              <td class="cell fa fa-2x" data-row="2" data-column="7"></td>
-              <td class="cell fa fa-2x" data-row="2" data-column="8"></td>
-              <td class="cell fa fa-2x" data-row="2" data-column="9"></td>
-            </tr>
-            <tr class="row">
-              <td class="cell fa fa-2x" data-row="3" data-column="0"></td>
-              <td class="cell fa fa-2x" data-row="3" data-column="1"></td>
-              <td class="cell fa fa-2x" data-row="3" data-column="2"></td>
-              <td class="cell fa fa-2x" data-row="3" data-column="3"></td>
-              <td class="cell fa fa-2x" data-row="3" data-column="4"></td>
-              <td class="cell fa fa-2x" data-row="3" data-column="5"></td>
-              <td class="cell fa fa-2x" data-row="3" data-column="6"></td>
-              <td class="cell fa fa-2x" data-row="3" data-column="7"></td>
-              <td class="cell fa fa-2x" data-row="3" data-column="8"></td>
-              <td class="cell fa fa-2x" data-row="3" data-column="9"></td>
-            </tr>
-            <tr class="row">
-              <td class="cell fa fa-2x" data-row="4" data-column="0"></td>
-              <td class="cell fa fa-2x" data-row="4" data-column="1"></td>
-              <td class="cell fa fa-2x" data-row="4" data-column="2"></td>
-              <td class="cell fa fa-2x" data-row="4" data-column="3"></td>
-              <td class="cell fa fa-2x" data-row="4" data-column="4"></td>
-              <td class="cell fa fa-2x" data-row="4" data-column="5"></td>
-              <td class="cell fa fa-2x" data-row="4" data-column="6"></td>
-              <td class="cell fa fa-2x" data-row="4" data-column="7"></td>
-              <td class="cell fa fa-2x" data-row="4" data-column="8"></td>
-              <td class="cell fa fa-2x" data-row="4" data-column="9"></td>
-            </tr>
-            <tr class="row">
-              <td class="cell fa fa-2x" data-row="5" data-column="0"></td>
-              <td class="cell fa fa-2x" data-row="5" data-column="1"></td>
-              <td class="cell fa fa-2x" data-row="5" data-column="2"></td>
-              <td class="cell fa fa-2x" data-row="5" data-column="3"></td>
-              <td class="cell fa fa-2x" data-row="5" data-column="4"></td>
-              <td class="cell fa fa-2x" data-row="5" data-column="5"></td>
-              <td class="cell fa fa-2x" data-row="5" data-column="6"></td>
-              <td class="cell fa fa-2x" data-row="5" data-column="7"></td>
-              <td class="cell fa fa-2x" data-row="5" data-column="8"></td>
-              <td class="cell fa fa-2x" data-row="5" data-column="9"></td>
-            </tr>
-            <tr class="row">
-              <td class="cell fa fa-2x" data-row="6" data-column="0"></td>
-              <td class="cell fa fa-2x" data-row="6" data-column="1"></td>
-              <td class="cell fa fa-2x" data-row="6" data-column="2"></td>
-              <td class="cell fa fa-2x" data-row="6" data-column="3"></td>
-              <td class="cell fa fa-2x" data-row="6" data-column="4"></td>
-              <td class="cell fa fa-2x" data-row="6" data-column="5"></td>
-              <td class="cell fa fa-2x" data-row="6" data-column="6"></td>
-              <td class="cell fa fa-2x" data-row="6" data-column="7"></td>
-              <td class="cell fa fa-2x" data-row="6" data-column="8"></td>
-              <td class="cell fa fa-2x" data-row="6" data-column="9"></td>
-            </tr>
-            <tr class="row">
-              <td class="cell fa fa-2x" data-row="7" data-column="0"></td>
-              <td class="cell fa fa-2x" data-row="7" data-column="1"></td>
-              <td class="cell fa fa-2x" data-row="7" data-column="2"></td>
-              <td class="cell fa fa-2x" data-row="7" data-column="3"></td>
-              <td class="cell fa fa-2x" data-row="7" data-column="4"></td>
-              <td class="cell fa fa-2x" data-row="7" data-column="5"></td>
-              <td class="cell fa fa-2x" data-row="7" data-column="6"></td>
-              <td class="cell fa fa-2x" data-row="7" data-column="7"></td>
-              <td class="cell fa fa-2x" data-row="7" data-column="8"></td>
-              <td class="cell fa fa-2x" data-row="7" data-column="9"></td>
-            </tr>
-            <tr class="row">
-              <td class="cell fa fa-2x" data-row="8" data-column="0"></td>
-              <td class="cell fa fa-2x" data-row="8" data-column="1"></td>
-              <td class="cell fa fa-2x" data-row="8" data-column="2"></td>
-              <td class="cell fa fa-2x" data-row="8" data-column="3"></td>
-              <td class="cell fa fa-2x" data-row="8" data-column="4"></td>
-              <td class="cell fa fa-2x" data-row="8" data-column="5"></td>
-              <td class="cell fa fa-2x" data-row="8" data-column="6"></td>
-              <td class="cell fa fa-2x" data-row="8" data-column="7"></td>
-              <td class="cell fa fa-2x" data-row="8" data-column="8"></td>
-              <td class="cell fa fa-2x" data-row="8" data-column="9"></td>
-            </tr>
-            <tr class="row">
-              <td class="cell fa fa-2x" data-row="9" data-column="0"></td>
-              <td class="cell fa fa-2x" data-row="9" data-column="1"></td>
-              <td class="cell fa fa-2x" data-row="9" data-column="2"></td>
-              <td class="cell fa fa-2x" data-row="9" data-column="3"></td>
-              <td class="cell fa fa-2x" data-row="9" data-column="4"></td>
-              <td class="cell fa fa-2x" data-row="9" data-column="5"></td>
-              <td class="cell fa fa-2x" data-row="9" data-column="6"></td>
-              <td class="cell fa fa-2x" data-row="9" data-column="7"></td>
-              <td class="cell fa fa-2x" data-row="9" data-column="8"></td>
-              <td class="cell fa fa-2x" data-row="9" data-column="9"></td>
-            </tr>
-          </table>
-        </div>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BattleShip</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+
+<body>
+  <nav>
+    <button class="signUp">Sign up</button>
+    <button class="signUp">Log in</button>
+    <button class="logout">Log out</button>
+    <div class="signPopup popup">
+      <div class="signPopupContent popupContent">
+        <input type="email" class="suEmail" placeholder="Email">
+        <input type="password" class="suPassword" placeholder="Password">
+        <button class='signUpBtn'>Sign up</button>
       </div>
     </div>
-    <script src="script.js"></script>
-  </body>
+    <div class="logiInPopup popup">
+      <div class="logiInPopupContent popupContent">
+        <input type="email" class="email" placeholder="Email">
+        <input type="password" class="password" placeholder="Password">
+        <button class='loginBtn'>Login</button>
+      </div>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="center">
+      <div class="fleet fleet-1">
+      </div>
+      <div class="board playingBoard">
+        <h2>Playing board</h2>
+        <table class="boardTable">
+          <tr class="row">
+            <td class="cell fa fa-2x" data-row="0" data-column="1"></td>
+            <td class="cell fa fa-2x" data-row="0" data-column="0"></td>
+            <td class="cell fa fa-2x" data-row="0" data-column="2"></td>
+            <td class="cell fa fa-2x" data-row="0" data-column="3"></td>
+            <td class="cell fa fa-2x" data-row="0" data-column="4"></td>
+            <td class="cell fa fa-2x" data-row="0" data-column="5"></td>
+            <td class="cell fa fa-2x" data-row="0" data-column="6"></td>
+            <td class="cell fa fa-2x" data-row="0" data-column="7"></td>
+            <td class="cell fa fa-2x" data-row="0" data-column="8"></td>
+            <td class="cell fa fa-2x" data-row="0" data-column="9"></td>
+          </tr>
+          <tr class="row">
+            <td class="cell fa fa-2x" data-row="1" data-column="0"></td>
+            <td class="cell fa fa-2x" data-row="1" data-column="1"></td>
+            <td class="cell fa fa-2x" data-row="1" data-column="2"></td>
+            <td class="cell fa fa-2x" data-row="1" data-column="3"></td>
+            <td class="cell fa fa-2x" data-row="1" data-column="4"></td>
+            <td class="cell fa fa-2x" data-row="1" data-column="5"></td>
+            <td class="cell fa fa-2x" data-row="1" data-column="6"></td>
+            <td class="cell fa fa-2x" data-row="1" data-column="7"></td>
+            <td class="cell fa fa-2x" data-row="1" data-column="8"></td>
+            <td class="cell fa fa-2x" data-row="1" data-column="9"></td>
+          </tr>
+          <tr class="row">
+            <td class="cell fa fa-2x" data-row="2" data-column="0"></td>
+            <td class="cell fa fa-2x" data-row="2" data-column="1"></td>
+            <td class="cell fa fa-2x" data-row="2" data-column="2"></td>
+            <td class="cell fa fa-2x" data-row="2" data-column="3"></td>
+            <td class="cell fa fa-2x" data-row="2" data-column="4"></td>
+            <td class="cell fa fa-2x" data-row="2" data-column="5"></td>
+            <td class="cell fa fa-2x" data-row="2" data-column="6"></td>
+            <td class="cell fa fa-2x" data-row="2" data-column="7"></td>
+            <td class="cell fa fa-2x" data-row="2" data-column="8"></td>
+            <td class="cell fa fa-2x" data-row="2" data-column="9"></td>
+          </tr>
+          <tr class="row">
+            <td class="cell fa fa-2x" data-row="3" data-column="0"></td>
+            <td class="cell fa fa-2x" data-row="3" data-column="1"></td>
+            <td class="cell fa fa-2x" data-row="3" data-column="2"></td>
+            <td class="cell fa fa-2x" data-row="3" data-column="3"></td>
+            <td class="cell fa fa-2x" data-row="3" data-column="4"></td>
+            <td class="cell fa fa-2x" data-row="3" data-column="5"></td>
+            <td class="cell fa fa-2x" data-row="3" data-column="6"></td>
+            <td class="cell fa fa-2x" data-row="3" data-column="7"></td>
+            <td class="cell fa fa-2x" data-row="3" data-column="8"></td>
+            <td class="cell fa fa-2x" data-row="3" data-column="9"></td>
+          </tr>
+          <tr class="row">
+            <td class="cell fa fa-2x" data-row="4" data-column="0"></td>
+            <td class="cell fa fa-2x" data-row="4" data-column="1"></td>
+            <td class="cell fa fa-2x" data-row="4" data-column="2"></td>
+            <td class="cell fa fa-2x" data-row="4" data-column="3"></td>
+            <td class="cell fa fa-2x" data-row="4" data-column="4"></td>
+            <td class="cell fa fa-2x" data-row="4" data-column="5"></td>
+            <td class="cell fa fa-2x" data-row="4" data-column="6"></td>
+            <td class="cell fa fa-2x" data-row="4" data-column="7"></td>
+            <td class="cell fa fa-2x" data-row="4" data-column="8"></td>
+            <td class="cell fa fa-2x" data-row="4" data-column="9"></td>
+          </tr>
+          <tr class="row">
+            <td class="cell fa fa-2x" data-row="5" data-column="0"></td>
+            <td class="cell fa fa-2x" data-row="5" data-column="1"></td>
+            <td class="cell fa fa-2x" data-row="5" data-column="2"></td>
+            <td class="cell fa fa-2x" data-row="5" data-column="3"></td>
+            <td class="cell fa fa-2x" data-row="5" data-column="4"></td>
+            <td class="cell fa fa-2x" data-row="5" data-column="5"></td>
+            <td class="cell fa fa-2x" data-row="5" data-column="6"></td>
+            <td class="cell fa fa-2x" data-row="5" data-column="7"></td>
+            <td class="cell fa fa-2x" data-row="5" data-column="8"></td>
+            <td class="cell fa fa-2x" data-row="5" data-column="9"></td>
+          </tr>
+          <tr class="row">
+            <td class="cell fa fa-2x" data-row="6" data-column="0"></td>
+            <td class="cell fa fa-2x" data-row="6" data-column="1"></td>
+            <td class="cell fa fa-2x" data-row="6" data-column="2"></td>
+            <td class="cell fa fa-2x" data-row="6" data-column="3"></td>
+            <td class="cell fa fa-2x" data-row="6" data-column="4"></td>
+            <td class="cell fa fa-2x" data-row="6" data-column="5"></td>
+            <td class="cell fa fa-2x" data-row="6" data-column="6"></td>
+            <td class="cell fa fa-2x" data-row="6" data-column="7"></td>
+            <td class="cell fa fa-2x" data-row="6" data-column="8"></td>
+            <td class="cell fa fa-2x" data-row="6" data-column="9"></td>
+          </tr>
+          <tr class="row">
+            <td class="cell fa fa-2x" data-row="7" data-column="0"></td>
+            <td class="cell fa fa-2x" data-row="7" data-column="1"></td>
+            <td class="cell fa fa-2x" data-row="7" data-column="2"></td>
+            <td class="cell fa fa-2x" data-row="7" data-column="3"></td>
+            <td class="cell fa fa-2x" data-row="7" data-column="4"></td>
+            <td class="cell fa fa-2x" data-row="7" data-column="5"></td>
+            <td class="cell fa fa-2x" data-row="7" data-column="6"></td>
+            <td class="cell fa fa-2x" data-row="7" data-column="7"></td>
+            <td class="cell fa fa-2x" data-row="7" data-column="8"></td>
+            <td class="cell fa fa-2x" data-row="7" data-column="9"></td>
+          </tr>
+          <tr class="row">
+            <td class="cell fa fa-2x" data-row="8" data-column="0"></td>
+            <td class="cell fa fa-2x" data-row="8" data-column="1"></td>
+            <td class="cell fa fa-2x" data-row="8" data-column="2"></td>
+            <td class="cell fa fa-2x" data-row="8" data-column="3"></td>
+            <td class="cell fa fa-2x" data-row="8" data-column="4"></td>
+            <td class="cell fa fa-2x" data-row="8" data-column="5"></td>
+            <td class="cell fa fa-2x" data-row="8" data-column="6"></td>
+            <td class="cell fa fa-2x" data-row="8" data-column="7"></td>
+            <td class="cell fa fa-2x" data-row="8" data-column="8"></td>
+            <td class="cell fa fa-2x" data-row="8" data-column="9"></td>
+          </tr>
+          <tr class="row">
+            <td class="cell fa fa-2x" data-row="9" data-column="0"></td>
+            <td class="cell fa fa-2x" data-row="9" data-column="1"></td>
+            <td class="cell fa fa-2x" data-row="9" data-column="2"></td>
+            <td class="cell fa fa-2x" data-row="9" data-column="3"></td>
+            <td class="cell fa fa-2x" data-row="9" data-column="4"></td>
+            <td class="cell fa fa-2x" data-row="9" data-column="5"></td>
+            <td class="cell fa fa-2x" data-row="9" data-column="6"></td>
+            <td class="cell fa fa-2x" data-row="9" data-column="7"></td>
+            <td class="cell fa fa-2x" data-row="9" data-column="8"></td>
+            <td class="cell fa fa-2x" data-row="9" data-column="9"></td>
+          </tr>
+        </table>
+      </div>
+      <div class="board yourboard">
+        <h2>Your ships</h2>
+        <table class="boardTable yourFleet">
+          <tr class="row">
+            <td class="cell fa fa-2x" data-row="0" data-column="0"></td>
+            <td class="cell fa fa-2x" data-row="0" data-column="1"></td>
+            <td class="cell fa fa-2x" data-row="0" data-column="2"></td>
+            <td class="cell fa fa-2x" data-row="0" data-column="3"></td>
+            <td class="cell fa fa-2x" data-row="0" data-column="4"></td>
+            <td class="cell fa fa-2x" data-row="0" data-column="5"></td>
+            <td class="cell fa fa-2x" data-row="0" data-column="6"></td>
+            <td class="cell fa fa-2x" data-row="0" data-column="7"></td>
+            <td class="cell fa fa-2x" data-row="0" data-column="8"></td>
+            <td class="cell fa fa-2x" data-row="0" data-column="9"></td>
+          </tr>
+          <tr class="row">
+            <td class="cell fa fa-2x" data-row="1" data-column="0"></td>
+            <td class="cell fa fa-2x" data-row="1" data-column="1"></td>
+            <td class="cell fa fa-2x" data-row="1" data-column="2"></td>
+            <td class="cell fa fa-2x" data-row="1" data-column="3"></td>
+            <td class="cell fa fa-2x" data-row="1" data-column="4"></td>
+            <td class="cell fa fa-2x" data-row="1" data-column="5"></td>
+            <td class="cell fa fa-2x" data-row="1" data-column="6"></td>
+            <td class="cell fa fa-2x" data-row="1" data-column="7"></td>
+            <td class="cell fa fa-2x" data-row="1" data-column="8"></td>
+            <td class="cell fa fa-2x" data-row="1" data-column="9"></td>
+          </tr>
+          <tr class="row">
+            <td class="cell fa fa-2x" data-row="2" data-column="0"></td>
+            <td class="cell fa fa-2x" data-row="2" data-column="1"></td>
+            <td class="cell fa fa-2x" data-row="2" data-column="2"></td>
+            <td class="cell fa fa-2x" data-row="2" data-column="3"></td>
+            <td class="cell fa fa-2x" data-row="2" data-column="4"></td>
+            <td class="cell fa fa-2x" data-row="2" data-column="5"></td>
+            <td class="cell fa fa-2x" data-row="2" data-column="6"></td>
+            <td class="cell fa fa-2x" data-row="2" data-column="7"></td>
+            <td class="cell fa fa-2x" data-row="2" data-column="8"></td>
+            <td class="cell fa fa-2x" data-row="2" data-column="9"></td>
+          </tr>
+          <tr class="row">
+            <td class="cell fa fa-2x" data-row="3" data-column="0"></td>
+            <td class="cell fa fa-2x" data-row="3" data-column="1"></td>
+            <td class="cell fa fa-2x" data-row="3" data-column="2"></td>
+            <td class="cell fa fa-2x" data-row="3" data-column="3"></td>
+            <td class="cell fa fa-2x" data-row="3" data-column="4"></td>
+            <td class="cell fa fa-2x" data-row="3" data-column="5"></td>
+            <td class="cell fa fa-2x" data-row="3" data-column="6"></td>
+            <td class="cell fa fa-2x" data-row="3" data-column="7"></td>
+            <td class="cell fa fa-2x" data-row="3" data-column="8"></td>
+            <td class="cell fa fa-2x" data-row="3" data-column="9"></td>
+          </tr>
+          <tr class="row">
+            <td class="cell fa fa-2x" data-row="4" data-column="0"></td>
+            <td class="cell fa fa-2x" data-row="4" data-column="1"></td>
+            <td class="cell fa fa-2x" data-row="4" data-column="2"></td>
+            <td class="cell fa fa-2x" data-row="4" data-column="3"></td>
+            <td class="cell fa fa-2x" data-row="4" data-column="4"></td>
+            <td class="cell fa fa-2x" data-row="4" data-column="5"></td>
+            <td class="cell fa fa-2x" data-row="4" data-column="6"></td>
+            <td class="cell fa fa-2x" data-row="4" data-column="7"></td>
+            <td class="cell fa fa-2x" data-row="4" data-column="8"></td>
+            <td class="cell fa fa-2x" data-row="4" data-column="9"></td>
+          </tr>
+          <tr class="row">
+            <td class="cell fa fa-2x" data-row="5" data-column="0"></td>
+            <td class="cell fa fa-2x" data-row="5" data-column="1"></td>
+            <td class="cell fa fa-2x" data-row="5" data-column="2"></td>
+            <td class="cell fa fa-2x" data-row="5" data-column="3"></td>
+            <td class="cell fa fa-2x" data-row="5" data-column="4"></td>
+            <td class="cell fa fa-2x" data-row="5" data-column="5"></td>
+            <td class="cell fa fa-2x" data-row="5" data-column="6"></td>
+            <td class="cell fa fa-2x" data-row="5" data-column="7"></td>
+            <td class="cell fa fa-2x" data-row="5" data-column="8"></td>
+            <td class="cell fa fa-2x" data-row="5" data-column="9"></td>
+          </tr>
+          <tr class="row">
+            <td class="cell fa fa-2x" data-row="6" data-column="0"></td>
+            <td class="cell fa fa-2x" data-row="6" data-column="1"></td>
+            <td class="cell fa fa-2x" data-row="6" data-column="2"></td>
+            <td class="cell fa fa-2x" data-row="6" data-column="3"></td>
+            <td class="cell fa fa-2x" data-row="6" data-column="4"></td>
+            <td class="cell fa fa-2x" data-row="6" data-column="5"></td>
+            <td class="cell fa fa-2x" data-row="6" data-column="6"></td>
+            <td class="cell fa fa-2x" data-row="6" data-column="7"></td>
+            <td class="cell fa fa-2x" data-row="6" data-column="8"></td>
+            <td class="cell fa fa-2x" data-row="6" data-column="9"></td>
+          </tr>
+          <tr class="row">
+            <td class="cell fa fa-2x" data-row="7" data-column="0"></td>
+            <td class="cell fa fa-2x" data-row="7" data-column="1"></td>
+            <td class="cell fa fa-2x" data-row="7" data-column="2"></td>
+            <td class="cell fa fa-2x" data-row="7" data-column="3"></td>
+            <td class="cell fa fa-2x" data-row="7" data-column="4"></td>
+            <td class="cell fa fa-2x" data-row="7" data-column="5"></td>
+            <td class="cell fa fa-2x" data-row="7" data-column="6"></td>
+            <td class="cell fa fa-2x" data-row="7" data-column="7"></td>
+            <td class="cell fa fa-2x" data-row="7" data-column="8"></td>
+            <td class="cell fa fa-2x" data-row="7" data-column="9"></td>
+          </tr>
+          <tr class="row">
+            <td class="cell fa fa-2x" data-row="8" data-column="0"></td>
+            <td class="cell fa fa-2x" data-row="8" data-column="1"></td>
+            <td class="cell fa fa-2x" data-row="8" data-column="2"></td>
+            <td class="cell fa fa-2x" data-row="8" data-column="3"></td>
+            <td class="cell fa fa-2x" data-row="8" data-column="4"></td>
+            <td class="cell fa fa-2x" data-row="8" data-column="5"></td>
+            <td class="cell fa fa-2x" data-row="8" data-column="6"></td>
+            <td class="cell fa fa-2x" data-row="8" data-column="7"></td>
+            <td class="cell fa fa-2x" data-row="8" data-column="8"></td>
+            <td class="cell fa fa-2x" data-row="8" data-column="9"></td>
+          </tr>
+          <tr class="row">
+            <td class="cell fa fa-2x" data-row="9" data-column="0"></td>
+            <td class="cell fa fa-2x" data-row="9" data-column="1"></td>
+            <td class="cell fa fa-2x" data-row="9" data-column="2"></td>
+            <td class="cell fa fa-2x" data-row="9" data-column="3"></td>
+            <td class="cell fa fa-2x" data-row="9" data-column="4"></td>
+            <td class="cell fa fa-2x" data-row="9" data-column="5"></td>
+            <td class="cell fa fa-2x" data-row="9" data-column="6"></td>
+            <td class="cell fa fa-2x" data-row="9" data-column="7"></td>
+            <td class="cell fa fa-2x" data-row="9" data-column="8"></td>
+            <td class="cell fa fa-2x" data-row="9" data-column="9"></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-firestore.js"></script>
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+  <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-analytics.js"></script>
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyD403ikJtXVMxVo5AKWWNIXXY7J-hcZQ0o",
+      authDomain: "battleship-303d7.firebaseapp.com",
+      databaseURL: "https://battleship-303d7.firebaseio.com",
+      projectId: "battleship-303d7",
+      storageBucket: "battleship-303d7.appspot.com",
+      messagingSenderId: "762263261694",
+      appId: "1:762263261694:web:ff21fe1e4a2942d20ab0af",
+      measurementId: "G-8P8NH3YW5N"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+
+    // Make auth reference
+    const auth = firebase.auth();
+    console.log("auth", auth)
+    const db = firebase.firestore();
+    console.log("db", db);
+  </script>
+  <script src="auth.js"></script>
+  <script src="script.js"></script>
+</body>
+
 </html>
