@@ -1,8 +1,8 @@
-const loginBtn = document.querySelector('.signUpBtn');
+const singUpBtn = document.querySelector('.signUpBtn');
 const logoutBtn = document.querySelector('.logout');
-console.log("logoutBtn", logoutBtn)
+const loginBtn = document.querySelector('.loginBtn')
 
-loginBtn.addEventListener('click', e => {
+singUpBtn.addEventListener('click', e => {
     e.preventDefault();
 
     const suemail = document.querySelector('.suEmail').value;
@@ -11,7 +11,7 @@ loginBtn.addEventListener('click', e => {
     auth.createUserWithEmailAndPassword(suemail, supasswd).then(cred => {
         console.log(cred);
     })
-    document.querySelector('.signPopupContent').style.display = 'none';
+    document.querySelector('.signPopup').style.display = 'none';
 })
 
 logoutBtn.addEventListener('click', e => {
@@ -21,3 +21,15 @@ logoutBtn.addEventListener('click', e => {
         console.log('User is logged out!')
     });
 })
+
+loginBtn.addEventListener('click', e => {
+    e.preventDefault();
+
+    const liEmail = document.querySelector('.liEmail').value;
+    const liPasswd = document.querySelector('.liPassword').value;
+
+    auth.signInWithEmailAndPassword(liEmail, liPasswd).then(cred => {
+        console.log(cred);
+    })
+    document.querySelector('.signPopup').style.display = 'none';
+});

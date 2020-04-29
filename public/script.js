@@ -11,10 +11,20 @@ const yourFleet = document.querySelector('.yourFleet')
 const cells = document.querySelectorAll('.yourFleet .cell');
 const boardCells = document.querySelectorAll('.playingBoard .cell');
 const signUp = document.querySelector('.signUp');
-let visible = false;
+const logIn = document.querySelector('.logIn');
+const close = document.querySelectorAll('.close');
+
+close.forEach(btn => btn.addEventListener('click', () => {
+    document.querySelector('.signPopup').style.display = 'none';
+    document.querySelector('.logInPopup').style.display = 'none';
+}))
 
 signUp.addEventListener('click', () => {
     document.querySelector('.signPopup').style.display = 'flex';
+})
+
+logIn.addEventListener('click', () => {
+    document.querySelector('.logInPopup').style.display = 'flex';
 })
 
 const fleet = SHIPS.reduce((fl, ship) => fl += `<p class="name"><span>${ship.name}</span> x ${ship.number}</p>

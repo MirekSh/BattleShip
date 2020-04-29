@@ -230,17 +230,28 @@ button:hover {
   border: 2px solid #000000;
 }
 
-.signPopup, .logiInPopup {
+.signPopup, .logInPopup {
   display: none;
 }
 
 .popupContent > input, .popupContent > button {
   margin: 20px auto;
-  display: block;
-  width: 50%;
   padding: 8px;
 }
 
+.popupContent > input {
+  width: 50%;
+  display: block;
+}
+
+.popupContent > button {
+  width: 20%;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+}
 .center {
   height: 50%;
   min-width: 80%;
