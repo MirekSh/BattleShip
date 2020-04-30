@@ -1,3 +1,22 @@
+// Get data
+db.collection('boards').get().then(response => {
+    console.log("response", response.docs);   
+})
+
+// Set data
+    db.collection('boards').doc('Test').set({ user: 'name', fields: 'Test' });
+
+// Auth status
+auth.onAuthStateChanged(user => {
+    if (user) {
+        console.log('User logged in');
+    }
+    else {
+        console.log('User logged out')
+    }
+})
+
+
 const singUpBtn = document.querySelector('.signUpBtn');
 const logoutBtn = document.querySelector('.logout');
 const loginBtn = document.querySelector('.loginBtn')
@@ -18,7 +37,7 @@ logoutBtn.addEventListener('click', e => {
     e.preventDefault();
 
     auth.signOut().then(() => {
-        console.log('User is logged out!')
+        
     });
 })
 
@@ -31,5 +50,5 @@ loginBtn.addEventListener('click', e => {
     auth.signInWithEmailAndPassword(liEmail, liPasswd).then(cred => {
         console.log(cred);
     })
-    document.querySelector('.signPopup').style.display = 'none';
+    document.querySelector('.logInPopup').style.display = 'none';
 });

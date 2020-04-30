@@ -13,6 +13,7 @@ const boardCells = document.querySelectorAll('.playingBoard .cell');
 const signUp = document.querySelector('.signUp');
 const logIn = document.querySelector('.logIn');
 const close = document.querySelectorAll('.close');
+const coordsTable = [];
 
 close.forEach(btn => btn.addEventListener('click', () => {
     document.querySelector('.signPopup').style.display = 'none';
@@ -43,7 +44,7 @@ function checkShip() {
 
 boardCells.forEach(boardCell => boardCell.addEventListener('click', checkShip));
 
-function isSlotAvailable(shipLength) {
+function fillAvailableSlot(shipLength) {
     const possibilities = [];
     cells.forEach(cell => {
         let { row, column } = cell.dataset;
@@ -69,14 +70,15 @@ function isSlotAvailable(shipLength) {
         }
     })
     const randomSlot = possibilities[Math.floor(Math.random() * possibilities.length)];
+    coordsTable.push(randomSlot);
     randomSlot.forEach(coords => {
         [...cells].find(cell => cell.dataset.row == coords[0] && cell.dataset.column == coords[1]).classList.toggle('fa-check');
         [...boardCells].find(cell => cell.dataset.row == coords[0] && cell.dataset.column == coords[1]).classList.toggle('ship');
     });
 }
 
-isSlotAvailable(5);
-isSlotAvailable(4);
-isSlotAvailable(3);
-isSlotAvailable(2);
-isSlotAvailable(2);
+fillAvailableSlot(5);
+fillAvailableSlot(4);
+fillAvailableSlot(3);
+fillAvailableSlot(2);
+fillAvailableSlot(2);
