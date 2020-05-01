@@ -1,15 +1,14 @@
 // Get data
 db.collection('boards').get().then(response => {
-    console.log("response", response.docs);   
+    setupBoard(response.docs);
 })
-
-// Set data
-    db.collection('boards').doc('Test').set({ user: 'name', fields: 'Test' });
 
 // Auth status
 auth.onAuthStateChanged(user => {
     if (user) {
-        console.log('User logged in');
+        db.collection('boards').add({ user_email: user.email, board: setData() }).then(() => {
+            console.log(`Data for ${user} added`);
+        })
     }
     else {
         console.log('User logged out')
@@ -37,7 +36,7 @@ logoutBtn.addEventListener('click', e => {
     e.preventDefault();
 
     auth.signOut().then(() => {
-        
+        console.log('User logged out');
     });
 })
 

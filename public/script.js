@@ -82,3 +82,16 @@ fillAvailableSlot(4);
 fillAvailableSlot(3);
 fillAvailableSlot(2);
 fillAvailableSlot(2);
+
+function setData() {
+    return coordsTable.reduce((board, ship, i) => {
+        return { ...board, [i]: ship.reduce((object, el, index) => {
+            return { ...object, [index]: { x: el[0], y: el[1] } };
+        }, {})
+    }
+    }, {});
+}
+
+function setupBoard(data) {
+    data.forEach(el => console.log(el.data()))
+}
