@@ -77,12 +77,6 @@ function fillAvailableSlot(shipLength) {
     });
 }
 
-fillAvailableSlot(5);
-fillAvailableSlot(4);
-fillAvailableSlot(3);
-fillAvailableSlot(2);
-fillAvailableSlot(2);
-
 function setData() {
     return coordsTable.reduce((board, ship, i) => {
         return { ...board, [i]: ship.reduce((object, el, index) => {
@@ -92,6 +86,7 @@ function setData() {
     }, {});
 }
 
-function setupBoard(data) {
-    data.forEach(el => console.log(el.data()))
+function setupBoard(data, email) {
+    const opponentBoard = data.map(el => el.data()).filter(el => el.user_email != email).reverse()[0];
+    console.log("setupBoard -> opponentBoard", opponentBoard)
 }

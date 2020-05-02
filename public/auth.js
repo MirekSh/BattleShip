@@ -1,17 +1,39 @@
-// Get data
-db.collection('boards').get().then(response => {
-    setupBoard(response.docs);
-})
+let game = {};
 
-// Auth status
+function remmoveDataFromFirestore(id) {
+    db.collection('boards').doc(id).delete()
+}
+
+function updateBoard(user) {
+    db.collection('boards').get().then(response => {
+        const boards = response.docs.filter(doc => doc.data().user_email === user.email);
+        Promise.all(boards.map(doc => remmoveDataFromFirestore(doc.id))).then(result => console.log(result));
+    }).then(() => {
+        fillAvailableSlot(5);
+        fillAvailableSlot(4);
+        fillAvailableSlot(3);
+        fillAvailableSlot(2);
+        fillAvailableSlot(2);
+
+        db.collection('boards').add({ user_email: user.email, board: setData() }).then(response => {
+            game.id = response.id;
+            console.log(`Data for ${user.email} added`);
+        }).then(() => {
+            db.collection('boards').get().then(response => {
+                setupBoard(response.docs, user.email);
+            });
+        })
+    })
+}
+
 auth.onAuthStateChanged(user => {
     if (user) {
-        db.collection('boards').add({ user_email: user.email, board: setData() }).then(() => {
-            console.log(`Data for ${user} added`);
-        })
+        updateBoard(user);
     }
     else {
-        console.log('User logged out')
+        db.collection('boards').doc(game.id).delete().then(function() {
+            console.log(`Document ${game.id} successfully deleted!`);
+        })
     }
 })
 
