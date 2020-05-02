@@ -14,6 +14,8 @@ const signUp = document.querySelector('.signUp');
 const logIn = document.querySelector('.logIn');
 const close = document.querySelectorAll('.close');
 const coordsTable = [];
+let opponentBoard;
+let fieldsArray = [];
 
 close.forEach(btn => btn.addEventListener('click', () => {
     document.querySelector('.signPopup').style.display = 'none';
@@ -38,11 +40,27 @@ function addShip() {
     this.classList.toggle('fa-check');
 }
 
-function checkShip() {
-    if (this.classList.contains('ship')) this.classList.add('fa-times');
+function setupBoard(data, email) {
+    const opponentBoard = data.map(el => el.data()).filter(el => el.user_email != email).reverse()[0];
+    for(ship in opponentBoard.board) {
+        for(field in opponentBoard.board[ship]) {
+            const { x, y } = opponentBoard.board[ship][field];
+            fieldsArray.push([x, y]);
+        }
+    }
 }
 
-boardCells.forEach(boardCell => boardCell.addEventListener('click', checkShip));
+function checkMarkedCell() {
+    const checked = fieldsArray.find(el => this.dataset.row == el[0] && this.dataset.column == el[1]);
+    console.log("checkMarkedCell -> checked", checked)
+    if (checked) {
+        this.classList.toggle('fa-check');
+    } else {
+        this.classList.toggle('fa-times-circle-o');
+    }
+}
+
+boardCells.forEach(boardCell => boardCell.addEventListener('click', checkMarkedCell));
 
 function fillAvailableSlot(shipLength) {
     const possibilities = [];
@@ -73,7 +91,6 @@ function fillAvailableSlot(shipLength) {
     coordsTable.push(randomSlot);
     randomSlot.forEach(coords => {
         [...cells].find(cell => cell.dataset.row == coords[0] && cell.dataset.column == coords[1]).classList.toggle('fa-check');
-        [...boardCells].find(cell => cell.dataset.row == coords[0] && cell.dataset.column == coords[1]).classList.toggle('ship');
     });
 }
 
@@ -86,7 +103,3 @@ function setData() {
     }, {});
 }
 
-function setupBoard(data, email) {
-    const opponentBoard = data.map(el => el.data()).filter(el => el.user_email != email).reverse()[0];
-    console.log("setupBoard -> opponentBoard", opponentBoard)
-}
