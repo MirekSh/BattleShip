@@ -7,7 +7,7 @@ function remmoveDataFromFirestore(id) {
 function updateBoard(user) {
     db.collection('boards').get().then(response => {
         const boards = response.docs.filter(doc => doc.data().user_email === user.email);
-        Promise.all(boards.map(doc => remmoveDataFromFirestore(doc.id))).then(result => console.log(result));
+        Promise.all(boards.map(doc => remmoveDataFromFirestore(doc.id)));
     }).then(() => {
         fillAvailableSlot(5);
         fillAvailableSlot(4);

@@ -42,6 +42,7 @@ function addShip() {
 
 function setupBoard(data, email) {
     const opponentBoard = data.map(el => el.data()).filter(el => el.user_email != email).reverse()[0];
+    console.log("setupBoard -> opponentBoard", opponentBoard.board)
     for(ship in opponentBoard.board) {
         for(field in opponentBoard.board[ship]) {
             const { x, y } = opponentBoard.board[ship][field];
@@ -51,10 +52,16 @@ function setupBoard(data, email) {
 }
 
 function checkMarkedCell() {
-    const checked = fieldsArray.find(el => this.dataset.row == el[0] && this.dataset.column == el[1]);
-    console.log("checkMarkedCell -> checked", checked)
+    let i;
+    const checked = fieldsArray.find((el, index) => {
+        i = index;
+        return this.dataset.row == el[0] && this.dataset.column == el[1]
+    });
     if (checked) {
         this.classList.toggle('fa-check');
+        fieldsArray.splice(i, 1);
+        console.log("checkMarkedCell -> fieldsArray", fieldsArray)
+        if (fieldsArray.length === 0) alert('There is no more ships');
     } else {
         this.classList.toggle('fa-times-circle-o');
     }
