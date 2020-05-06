@@ -11,6 +11,7 @@
 
 <body>
   <nav>
+    <p class="counter"></p>
     <button class="signUp">Sign up</button>
     <button class="logIn">Log in</button>
     <button class="logout">Log out</button>
@@ -316,12 +317,9 @@
 
     // Make auth reference
     const auth = firebase.auth();
-    console.log("auth", auth)
     const db = firebase.firestore();
-    console.log("db", db);
   </script>
   <script src="script.js"></script>
-  <script src="auth.js"></script>
 </body>
 
 </html>
