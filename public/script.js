@@ -18,12 +18,16 @@ const singUpBtn = document.querySelector('.signUpBtn');
 const logoutBtn = document.querySelector('.logout');
 const loginBtn = document.querySelector('.loginBtn');
 const counter = document.querySelector('.counter');
+const currUser = document.querySelector('.user');
 const coordsTable = [];
 let opponentBoard;
 let fieldsArray = [];
 let game = {};
 let otherPlayer;
 let yourRounds = 0;
+let currentUser;
+let currentEmail;
+let docRef;
 
 
 const fleet = SHIPS.reduce((fl, ship) => fl += `<p class="name"><span>${ship.name}</span> x ${ship.number}</p>
@@ -46,7 +50,6 @@ function setupBoard(data, email) {
 }
 
 function checkMarkedCell() {
-    console.log("checkMarkedCell -> yourRounds", yourRounds)
     if(yourRounds > 0) {
         let i;
         const checked = fieldsArray.find((el, index) => {
@@ -111,27 +114,60 @@ function setData() {
 }
 
 function getCounter(user) {
+    const query = db.collection('rounds').orderBy('timestamp', 'desc').limit(1);
+    query.onSnapshot(snapshot => {
+        snapshot.docChanges().forEach(change => {
+          console.log('Change', change);
+        });
+    })
     return db.collection('rounds').get().then(response => {
-        const round = response.docs.filter(round => round.data().player1.mail == user.email || round.data().player2.mail == user.email).map(round => round.data())[0];
+        const round = response.docs.find(doc => doc.data()[user.email]).data()[user.email].round;
         console.log("getCounter -> round", round)
-        const playerRound = round.player1.mail == user.email ? round.player1.round : round.player2.round;
-        yourRounds = playerRound;
-        counter.innerText = `You have ${playerRound} turns`;
+        yourRounds = round;
+        counter.innerText = `You have ${round} turns`;
     })
 }
 
-function resetCounter(user) {
-    return db.collection('rounds').add({
-        player1: {
-            mail: user.email,
-            round: random * 5,
-        },
-        player2: {
-            mail: otherPlayer.user_email,
-            round: (1 - random) * 5,
-        }
+function resetCounter() {
+    let player1;
+    let player2;
+    db.collection('rounds').get().then(response => {
+        const data = response.docs.map(el => el.data())
+        // player = response.docs.map(el => el.data()).filter(el => el.user_email != currentUser.email)[0];
+        console.log("resetCounter -> otherPlayer", data)
     })
+    // return db.collection('rounds').doc(docRef).update({
+    //     player1: {
+    //         mail: user.email,
+    //         round: currentUser.email == ,
+    //     },
+    //     player2: {
+    //         mail: otherPlayer.user_email,
+    //         round: (1 - random) * 5,
+    //     }
+    // })
 }
+
+// function loadMessages() {
+//     // Create the query to load the last 12 messages and listen for new ones.
+//     var query = firebase.firestore()
+//                     .collection('messages')
+//                     .orderBy('timestamp', 'desc')
+//                     .limit(12);
+
+//     // Start listening to the query.
+//     query.onSnapshot(function(snapshot) {
+//       snapshot.docChanges().forEach(function(change) {
+//         if (change.type === 'removed') {
+//           deleteMessage(change.doc.id);
+//         } else {
+//           var message = change.doc.data();
+//           displayMessage(change.doc.id, message.timestamp, message.name,
+//                          message.text, message.profilePicUrl, message.imageUrl);
+//         }
+//       });
+//     });
+//   }
 
 function remmoveDataFromFirestore(id, collection) {
     db.collection(collection).doc(id).delete()
@@ -144,7 +180,7 @@ function clearData(user) {
             remmoveDataFromFirestore(doc.id, 'boards')
         ));
     }).then(() => db.collection('rounds').get().then(response => {
-        const rounds = response.docs.filter(round => round.data().player1.mail == user.email || round.data().player2.mail);
+        const rounds = response.docs.filter(doc => doc.data()[user.email]);
         return Promise.all(rounds.map(round =>
             remmoveDataFromFirestore(round.id, 'rounds')
         ))
@@ -168,21 +204,24 @@ function updateBoard(user) {
             })).then(() => {
             const random = Math.round(Math.random());
             return db.collection('rounds').add({
-                player1: {
-                    mail: user.email,
+                [user.email]: {
                     round: random * 5,
                 },
-                player2: {
-                    mail: otherPlayer.user_email,
+                [otherPlayer.user_email]: {
                     round: (1 - random) * 5,
                 }
+            }).then(response => {
+                docRef = response.id;
             })
         })
 }
 
 auth.onAuthStateChanged(user => {
     if (user) {
-        clearData(user).then(() => updateBoard(user)).then(() => getCounter(user));
+        clearData(user).then(() => updateBoard(user)).then(() => getCounter(user)).then(() => {
+            currentUser = user;
+            currUser.innerText = `Logged user ${currentUser.email}`;
+        }).then(() => resetCounter());
     }
     else {
         db.collection('boards').doc(game.id).delete().then(function() {
