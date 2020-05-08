@@ -65,10 +65,10 @@ function checkMarkedCell() {
         }
         yourRounds--;
         counter.innerText = `You have ${yourRounds} turns`;
+        if(yourRounds === 0) resetCounter().then(() => getCounter(currentUser));
     }
     else {
         playingBoard.style.pointerEvents = 'none';
-        console.log("checkMarkedCell -> playingBoard", playingBoard)
     }
 }
 
@@ -114,38 +114,38 @@ function setData() {
 }
 
 function getCounter(user) {
-    const query = db.collection('rounds').orderBy('timestamp', 'desc').limit(1);
-    query.onSnapshot(snapshot => {
-        snapshot.docChanges().forEach(change => {
-          console.log('Change', change);
-        });
-    })
-    return db.collection('rounds').get().then(response => {
-        const round = response.docs.find(doc => doc.data()[user.email]).data()[user.email].round;
-        console.log("getCounter -> round", round)
-        yourRounds = round;
-        counter.innerText = `You have ${round} turns`;
+    const currentUserName = user.email.split('.')[0];
+    const query = db.collection('rounds').limit(1);
+    return query.onSnapshot(snapshot => {
+        if(snapshot) {
+            console.log(snapshot)
+            snapshot.docChanges().forEach(change => {
+                const { round } = change.doc.data()[currentUserName];
+                yourRounds = round;
+                docRef = change.doc.id;
+                counter.innerText = `You have ${round} turns`;
+              });
+        }
+
     })
 }
 
 function resetCounter() {
-    let player1;
-    let player2;
-    db.collection('rounds').get().then(response => {
-        const data = response.docs.map(el => el.data())
-        // player = response.docs.map(el => el.data()).filter(el => el.user_email != currentUser.email)[0];
-        console.log("resetCounter -> otherPlayer", data)
+    let document;
+    const currentUserName = currentUser.email.split('.')[0]
+    const otherUserName = otherPlayer.user_email.split('.')[0]
+    return db.collection('rounds').get().then(response => {
+        document = response.docs.find(doc => doc.id === docRef);
+    }).then(() => {
+        db.collection('rounds').doc(document.id).update({
+            [currentUserName]: {
+                round: 0,
+            },
+            [otherUserName]: {
+                round: 5,
+            },
+        });
     })
-    // return db.collection('rounds').doc(docRef).update({
-    //     player1: {
-    //         mail: user.email,
-    //         round: currentUser.email == ,
-    //     },
-    //     player2: {
-    //         mail: otherPlayer.user_email,
-    //         round: (1 - random) * 5,
-    //     }
-    // })
 }
 
 // function loadMessages() {
@@ -181,9 +181,11 @@ function clearData(user) {
         ));
     }).then(() => db.collection('rounds').get().then(response => {
         const rounds = response.docs.filter(doc => doc.data()[user.email]);
-        return Promise.all(rounds.map(round =>
-            remmoveDataFromFirestore(round.id, 'rounds')
-        ))
+        if (rounds.length > 0) {
+            return Promise.all(rounds.map(round =>
+                remmoveDataFromFirestore(round.id, 'rounds')
+            ))
+        } else return;
     }))
 }
 
@@ -203,11 +205,13 @@ function updateBoard(user) {
                 setupBoard(response.docs, user.email);
             })).then(() => {
             const random = Math.round(Math.random());
+            const currentUserName = user.email.split('.')[0]
+            const otherUserName = otherPlayer.user_email.split('.')[0]
             return db.collection('rounds').add({
-                [user.email]: {
+                [currentUserName]: {
                     round: random * 5,
                 },
-                [otherPlayer.user_email]: {
+                [otherUserName]: {
                     round: (1 - random) * 5,
                 }
             }).then(response => {
@@ -221,7 +225,7 @@ auth.onAuthStateChanged(user => {
         clearData(user).then(() => updateBoard(user)).then(() => getCounter(user)).then(() => {
             currentUser = user;
             currUser.innerText = `Logged user ${currentUser.email}`;
-        }).then(() => resetCounter());
+        });
     }
     else {
         db.collection('boards').doc(game.id).delete().then(function() {
