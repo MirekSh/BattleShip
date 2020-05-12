@@ -19,6 +19,7 @@ const logoutBtn = document.querySelector('.logout');
 const loginBtn = document.querySelector('.loginBtn');
 const counter = document.querySelector('.counter');
 const currUser = document.querySelector('.user');
+const oponnent = document.querySelector('.opponent');
 const coordsTable = [];
 let opponentBoard;
 let fieldsArray = [];
@@ -38,12 +39,10 @@ function addShip() {
     this.classList.toggle('fa-check');
 }
 
-function setupBoard(data, email) {
-    const opponentBoard = data.map(el => el.data()).filter(el => el.user_email != email).reverse()[0];
-
-    for(ship in opponentBoard.board) {
-        for(field in opponentBoard.board[ship]) {
-            const { x, y } = opponentBoard.board[ship][field];
+function setupBoard(data) {
+    for(ship in data) {
+        for(field in data[ship]) {
+            const { x, y } = data[ship][field];
             fieldsArray.push([x, y]);
         }
     }
@@ -81,27 +80,37 @@ function fillAvailableSlot(shipLength) {
         if (row + shipLength <= 9) {
             const slot = [];
             for (let i = row; i < row + shipLength; i++) {
-               const currentCell = [...cells].find(cell => cell.dataset.row == i && cell.dataset.column == column);
-               if (!currentCell.classList.contains('fa-check')) slot.push([i, column]);
+               slot.push([i, column]);
             }
-            possibilities.push(slot);
+            if (Object.keys(coordsTable).length === 0 || slot.every(el => {
+                for (ship in coordsTable) {
+                    for (cell in coordsTable[ship]) {
+                        return coordsTable[ship][cell].x !== el[0] && coordsTable[ship][cell].y !== el[1];
+                    }
+                }
+            })) possibilities.push(slot);
         }
         if (column + shipLength <= 9) {
             const slot = [];
             for (let i = column; i < column + shipLength; i++) {
-                const currentCell = [...cells].find(cell => cell.dataset.row == row && cell.dataset.column == i);
-                if (!currentCell.classList.contains('fa-check')) {
-                    slot.push([row, i]);
-                }
-            }
-            possibilities.push(slot);
+                slot.push([row, i]);
+             }
+             if (Object.keys(coordsTable).length === 0 || slot.every(el => {
+                 for (ship in coordsTable) {
+                     for (cell in coordsTable[ship]) {
+                         return coordsTable[ship][cell].x !== el[0] && coordsTable[ship][cell].y !== el[1];
+                     }
+                 }
+             })) possibilities.push(slot);
         }
     })
+    console.log("fillAvailableSlot -> possibilities", possibilities);
     const randomSlot = possibilities[Math.floor(Math.random() * possibilities.length)];
     coordsTable.push(randomSlot);
-    randomSlot.forEach(coords => {
-        [...cells].find(cell => cell.dataset.row == coords[0] && cell.dataset.column == coords[1]).classList.toggle('fa-check');
-    });
+    console.log("fillAvailableSlot -> coordsTable", coordsTable)
+    // randomSlot.forEach(coords => {
+    //     [...cells].find(cell => cell.dataset.row == coords[0] && cell.dataset.column == coords[1]).classList.toggle('fa-check');
+    // });
 }
 
 function setData() {
@@ -120,10 +129,14 @@ function getCounter(user) {
         if(snapshot) {
             console.log(snapshot)
             snapshot.docChanges().forEach(change => {
+                const otherUser = Object.keys(change.doc.data()).filter(name => name != currentUserName);
                 const { round } = change.doc.data()[currentUserName];
+                const { board } = change.doc.data()[otherUser];
+                setupBoard(board);
                 yourRounds = round;
                 docRef = change.doc.id;
                 counter.innerText = `You have ${round} turns`;
+                playingBoard.style.pointerEvents = 'auto';
               });
         }
 
@@ -148,27 +161,6 @@ function resetCounter() {
     })
 }
 
-// function loadMessages() {
-//     // Create the query to load the last 12 messages and listen for new ones.
-//     var query = firebase.firestore()
-//                     .collection('messages')
-//                     .orderBy('timestamp', 'desc')
-//                     .limit(12);
-
-//     // Start listening to the query.
-//     query.onSnapshot(function(snapshot) {
-//       snapshot.docChanges().forEach(function(change) {
-//         if (change.type === 'removed') {
-//           deleteMessage(change.doc.id);
-//         } else {
-//           var message = change.doc.data();
-//           displayMessage(change.doc.id, message.timestamp, message.name,
-//                          message.text, message.profilePicUrl, message.imageUrl);
-//         }
-//       });
-//     });
-//   }
-
 function remmoveDataFromFirestore(id, collection) {
     db.collection(collection).doc(id).delete()
 }
@@ -180,7 +172,8 @@ function clearData(user) {
             remmoveDataFromFirestore(doc.id, 'boards')
         ));
     }).then(() => db.collection('rounds').get().then(response => {
-        const rounds = response.docs.filter(doc => doc.data()[user.email]);
+        const userName = user.email.split('.')[0];
+        const rounds = response.docs.filter(doc => doc.data()[userName]);
         if (rounds.length > 0) {
             return Promise.all(rounds.map(round =>
                 remmoveDataFromFirestore(round.id, 'rounds')
@@ -195,27 +188,34 @@ function updateBoard(user) {
         fillAvailableSlot(3);
         fillAvailableSlot(2);
         fillAvailableSlot(2);
-
-        return db.collection('boards').add({ user_email: user.email, board: setData() }).then(response => {
+        const board = setData();
+        return db.collection('boards').add({ user_email: user.email, board }).then(response => {
             game.id = response.id;
             console.log(`Data for ${user.email} added`);
         }).then(() =>
             db.collection('boards').get().then(response => {
                 otherPlayer = response.docs.map(el => el.data()).filter(el => el.user_email != user.email)[0];
-                setupBoard(response.docs, user.email);
             })).then(() => {
             const random = Math.round(Math.random());
             const currentUserName = user.email.split('.')[0]
             const otherUserName = otherPlayer.user_email.split('.')[0]
+            oponnent.innerText = `Oponent: ${otherPlayer.user_email}`;
             return db.collection('rounds').add({
                 [currentUserName]: {
                     round: random * 5,
+                    board,
                 },
                 [otherUserName]: {
                     round: (1 - random) * 5,
+                    board: otherPlayer.board,
                 }
             }).then(response => {
                 docRef = response.id;
+                // for (ship in coordsTable) {
+                //     for (cell in coordsTable[ship]) {
+                //         return coordsTable[ship][cell].x !== el[0] && coordsTable[ship][cell].y !== el[1];
+                //     }
+                // }
             })
         })
 }
