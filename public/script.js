@@ -30,7 +30,6 @@ let currentUser;
 let currentEmail;
 let docRef;
 
-
 const fleet = SHIPS.reduce((fl, ship) => fl += `<p class="name"><span>${ship.name}</span> x ${ship.number}</p>
         <p class="size">Size: ${ship.size} <img src="./media/${ship.name.toLowerCase()}.png" alt="${ship.name}-img" /> </p>`, ''
 )
@@ -39,16 +38,38 @@ function addShip() {
     this.classList.toggle('fa-check');
 }
 
+function updateRounds(user, userRound, userBoard) {
+    let document;
+    db.collection('rounds').get().then(response => {
+        document = response.docs.find(doc => doc.id === docRef);
+    }).then(() => {
+        const otherUser = Object.keys(document.data()).find(el => el != user);
+        db.collection('rounds').doc(document.id).update({
+            [user]: {
+                round: userRound,
+                board: userBoard,
+            },
+            [otherUser]: {
+                round: 5 - userRound,
+                board: document.data()[otherUser].board,
+            },
+        });
+    })
+}
+
 function setupBoard(data) {
+    const fieldArray = [];
     for(ship in data) {
         for(field in data[ship]) {
             const { x, y } = data[ship][field];
-            fieldsArray.push([x, y]);
+            fieldArray.push([x, y]);
         }
     }
+    return fieldArray;
 }
 
 function checkMarkedCell() {
+    const currentUserName = currentUser.email.split('.')[0]
     if(yourRounds > 0) {
         let i;
         const checked = fieldsArray.find((el, index) => {
@@ -58,6 +79,8 @@ function checkMarkedCell() {
         if (checked) {
             this.classList.toggle('fa-check');
             fieldsArray.splice(i, 1);
+            console.log(setData(fieldsArray));
+            updateRounds(currentUserName, yourRounds, setData(fieldsArray));
             if (fieldsArray.length === 0) alert('There is no more ships');
         } else {
             this.classList.toggle('fa-times-circle-o');
@@ -104,17 +127,12 @@ function fillAvailableSlot(shipLength) {
              })) possibilities.push(slot);
         }
     })
-    console.log("fillAvailableSlot -> possibilities", possibilities);
     const randomSlot = possibilities[Math.floor(Math.random() * possibilities.length)];
     coordsTable.push(randomSlot);
-    console.log("fillAvailableSlot -> coordsTable", coordsTable)
-    // randomSlot.forEach(coords => {
-    //     [...cells].find(cell => cell.dataset.row == coords[0] && cell.dataset.column == coords[1]).classList.toggle('fa-check');
-    // });
 }
 
-function setData() {
-    return coordsTable.reduce((board, ship, i) => {
+function setData(table) {
+    return table.reduce((board, ship, i) => {
         return { ...board, [i]: ship.reduce((object, el, index) => {
             return { ...object, [index]: { x: el[0], y: el[1] } };
         }, {})
@@ -127,12 +145,11 @@ function getCounter(user) {
     const query = db.collection('rounds').limit(1);
     return query.onSnapshot(snapshot => {
         if(snapshot) {
-            console.log(snapshot)
             snapshot.docChanges().forEach(change => {
                 const otherUser = Object.keys(change.doc.data()).filter(name => name != currentUserName);
                 const { round } = change.doc.data()[currentUserName];
                 const { board } = change.doc.data()[otherUser];
-                setupBoard(board);
+                fieldsArray = setupBoard(board);
                 yourRounds = round;
                 docRef = change.doc.id;
                 counter.innerText = `You have ${round} turns`;
@@ -149,13 +166,16 @@ function resetCounter() {
     const otherUserName = otherPlayer.user_email.split('.')[0]
     return db.collection('rounds').get().then(response => {
         document = response.docs.find(doc => doc.id === docRef);
+        console.log("resetCounter -> document", document.data())
     }).then(() => {
         db.collection('rounds').doc(document.id).update({
             [currentUserName]: {
                 round: 0,
+                board: document.data()[currentUserName].board,
             },
             [otherUserName]: {
                 round: 5,
+                board: document.data()[otherUserName].board,
             },
         });
     })
@@ -188,7 +208,7 @@ function updateBoard(user) {
         fillAvailableSlot(3);
         fillAvailableSlot(2);
         fillAvailableSlot(2);
-        const board = setData();
+        const board = setData(coordsTable);
         return db.collection('boards').add({ user_email: user.email, board }).then(response => {
             game.id = response.id;
             console.log(`Data for ${user.email} added`);
@@ -211,11 +231,13 @@ function updateBoard(user) {
                 }
             }).then(response => {
                 docRef = response.id;
-                // for (ship in coordsTable) {
-                //     for (cell in coordsTable[ship]) {
-                //         return coordsTable[ship][cell].x !== el[0] && coordsTable[ship][cell].y !== el[1];
-                //     }
-                // }
+                console.log('Board', board);
+                for (ship in board) {
+                    for (cell in board[ship]) {
+                        const { x, y } = board[ship][cell];
+                        [...cells].find(cell => cell.dataset.row == x && cell.dataset.column == y).classList.toggle('fa-check');
+                    }
+                }
             })
         })
 }
