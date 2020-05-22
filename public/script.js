@@ -27,7 +27,6 @@ let game = {};
 let otherPlayer;
 let yourRounds = 0;
 let currentUser;
-let currentEmail;
 let docRef;
 
 const fleet = SHIPS.reduce(
@@ -41,45 +40,40 @@ const fleet = SHIPS.reduce(
   ""
 );
 
-function addShip() {
-  this.classList.toggle("fa-check");
-}
-
-function updateRounds(user, userRound, userBoard) {
-  let document;
-  db.collection("rounds")
-    .get()
-    .then((response) => {
-      document = response.docs.find((doc) => doc.id === docRef);
-    })
-    .then(() => {
-      const otherUser = Object.keys(document.data()).find((el) => el != user);
-      db.collection("rounds")
-        .doc(document.id)
-        .update({
-          [user]: {
-            round: userRound,
-            board: userBoard,
-          },
-          [otherUser]: {
-            round: 5 - userRound,
-            board: document.data()[otherUser].board,
-          },
-        });
-    });
-}
+// function updateRounds(user, userRound, userBoard) {
+//   let document;
+//   db.collection("rounds")
+//     .get()
+//     .then((response) => {
+//       document = response.docs.find((doc) => doc.id === docRef);
+//     })
+//     .then(() => {
+//       const otherUser = Object.keys(document.data()).find((el) => el != user);
+//       db.collection("rounds")
+//         .doc(document.id)
+//         .update({
+//           [user]: {
+//             round: userRound,
+//             board: userBoard,
+//           },
+//           [otherUser]: {
+//             round: 5 - userRound,
+//             board: document.data()[otherUser].board,
+//           },
+//         });
+//     });
+// }
 
 function setupBoard(data) {
   const fieldArray = [];
-    for (field in data) {
-      const { x, y } = data[field];
-      fieldArray.push([x, y]);
-    }
+  for (field in data) {
+    const { x, y } = data[field];
+    fieldArray.push([x, y]);
+  }
   return fieldArray;
 }
 
 function checkMarkedCell() {
-  const currentUserName = currentUser.email.split(".")[0];
   if (yourRounds > 0) {
     let i;
     const checked = fieldsArray.find((el, index) => {
@@ -90,7 +84,6 @@ function checkMarkedCell() {
       this.classList.toggle("fa-check");
       fieldsArray.splice(i, 1);
       console.log(setData(fieldsArray));
-      // updateRounds(currentUserName, yourRounds, setData(fieldsArray));
       if (fieldsArray.length === 0) alert("There is no more ships");
     } else {
       this.classList.toggle("fa-times-circle-o");
@@ -161,32 +154,82 @@ function setData(table) {
   }, {});
 }
 
-// function setData(table) {
-//     return table.reduce((board, ship, i) => {
-//         return { ...board, [i]: ship.reduce((object, el, index) => {
-//             return { ...object, [index]: { x: el[0], y: el[1] } };
-//         }, {})
-//     }
-//     }, {});
-// }
+function fillFleet(cells, board) {
+  const boardArray = Object.values(board);
+  console.log("fillFleet -> boardArray", boardArray)
+  boardArray.forEach(coords => [...cells].find(cell => cell.dataset.row == coords.x && cell.dataset.column == coords.y).classList.add('fa-check'));
+}
+
+function setGame(user) {
+  const queryBoard = db.collection("boards");
+  return queryBoard.onSnapshot((snapshot) => {
+    if (snapshot) {
+      const changes = snapshot.docChanges();
+      if (changes.length >= 2) {
+        const userBoard = changes.find(
+          (change) => change.doc.data().user_email === user.email
+        );
+        console.log("setGame -> userBoard", userBoard);
+        const otherUserBoard = changes.find(
+          (change) => change.doc.data().user_email !== user.email
+        );
+        console.log("setGame -> otherUserBoard", otherUserBoard);
+
+        const userBoardData = userBoard.doc.data();
+        const otherUserBoardData = otherUserBoard.doc.data();
+        const random = Math.round(Math.random());
+        const currentUserName = userBoardData.user_email.split(".")[0];
+        const otherUserName = otherUserBoardData.user_email.split(".")[0];
+        return db
+          .collection("rounds")
+          .add({
+            [currentUserName]: {
+              round: random * 5,
+              board: userBoardData.board,
+            },
+            [otherUserName]: {
+              round: (1 - random) * 5,
+              board: otherUserBoardData.board,
+            },
+          })
+          .then(response => {
+            game.id = response.id;
+          })
+          .then(() => {
+            [userBoard.doc.id, otherUserBoard.doc.id].forEach((id) =>
+              remmoveDataFromFirestore(id, "boards")
+            );
+          });
+      }
+    }
+  });
+}
 
 function getCounter(user) {
   const currentUserName = user.email.split(".")[0];
-  const query = db.collection("rounds").limit(1);
+  const query = db.collection("rounds");
   return query.onSnapshot((snapshot) => {
-    if (snapshot) {
-      snapshot.docChanges().forEach((change) => {
-        const otherUser = Object.keys(change.doc.data()).filter(
-          (name) => name != currentUserName
-        );
-        const { round } = change.doc.data()[currentUserName];
-        const { board } = change.doc.data()[otherUser];
-        fieldsArray = setupBoard(board);
-        yourRounds = round;
-        docRef = change.doc.id;
-        counter.innerText = `You have ${round} turns`;
-        playingBoard.style.pointerEvents = "auto";
-      });
+    if (
+      snapshot.docChanges().length > 0 &&
+      snapshot.docChanges().some((change) => change.doc.data()[currentUserName])
+    ) {
+      const filtered = snapshot
+        .docChanges()
+        .find((change) => change.doc.data()[currentUserName]);
+      const filteredChange = filtered.doc.data();
+      otherPlayer = Object.keys(filteredChange).find(
+        (name) => name != currentUserName
+      );
+      const { round } = filteredChange[currentUserName];
+      const { board } = filteredChange[otherPlayer];
+
+      fillFleet(cells, filteredChange[currentUserName].board);
+      fieldsArray = setupBoard(board);
+      yourRounds = round;
+      docRef = filtered.doc.id;
+      counter.innerText = `You have ${round} turns`;
+      oponnent.innerText = `Oponent: ${otherPlayer}`;
+      playingBoard.style.pointerEvents = "auto";
     }
   });
 }
@@ -194,13 +237,11 @@ function getCounter(user) {
 function resetCounter() {
   let document;
   const currentUserName = currentUser.email.split(".")[0];
-  const otherUserName = otherPlayer.user_email.split(".")[0];
   return db
     .collection("rounds")
     .get()
     .then((response) => {
       document = response.docs.find((doc) => doc.id === docRef);
-      console.log("resetCounter -> document", document.data());
     })
     .then(() => {
       db.collection("rounds")
@@ -210,9 +251,9 @@ function resetCounter() {
             round: 0,
             board: document.data()[currentUserName].board,
           },
-          [otherUserName]: {
+          [otherPlayer]: {
             round: 5,
-            board: document.data()[otherUserName].board,
+            board: document.data()[otherPlayer].board,
           },
         });
     });
@@ -252,7 +293,7 @@ function clearData(user) {
     );
 }
 
-function updateBoard(user) {
+function createBoard(user) {
   SHIPS.forEach((ship) => {
     for (let i = 0; i < ship.number; i++) {
       fillAvailableSlot(ship.size);
@@ -263,63 +304,23 @@ function updateBoard(user) {
   return db
     .collection("boards")
     .add({ user_email: user.email, board })
-    .then((response) => {
-      game.id = response.id;
-      console.log(`Data for ${user.email} added`);
-    })
-    .then(() =>
-      db
-        .collection("boards")
-        .get()
-        .then((response) => {
-          otherPlayer = response.docs
-            .map((el) => el.data())
-            .filter((el) => el.user_email != user.email)[0];
-        })
-    )
     .then(() => {
-      const random = Math.round(Math.random());
-      const currentUserName = user.email.split(".")[0];
-      const otherUserName = otherPlayer.user_email.split(".")[0];
-      oponnent.innerText = `Oponent: ${otherPlayer.user_email}`;
-      return db
-        .collection("rounds")
-        .add({
-          [currentUserName]: {
-            round: random * 5,
-            board,
-          },
-          [otherUserName]: {
-            round: (1 - random) * 5,
-            board: otherPlayer.board,
-          },
-        })
-        .then((response) => {
-          docRef = response.id;
-          console.log("Board", board);
-            for (cell in board) {
-              const { x, y } = board[cell];
-              [...cells]
-                .find(
-                  (cell) => cell.dataset.row == x && cell.dataset.column == y
-                )
-                .classList.add("fa-check");
-            }
-        });
+      console.log(`Data for ${user.email} added`);
     });
 }
 
 auth.onAuthStateChanged((user) => {
   if (user) {
     clearData(user)
-      .then(() => updateBoard(user))
+      .then(() => createBoard(user))
+      .then(() => setGame(user))
       .then(() => getCounter(user))
       .then(() => {
         currentUser = user;
         currUser.innerText = `Logged user ${currentUser.email}`;
       });
   } else {
-    db.collection("boards")
+    db.collection("rounds")
       .doc(game.id)
       .delete()
       .then(function () {
