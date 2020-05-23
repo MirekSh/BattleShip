@@ -2,7 +2,7 @@ const SHIPS = [
   { name: "Carrier", size: 5, number: 1 },
   { name: "Battleship", size: 4, number: 1 },
   { name: "Destroyer", size: 3, number: 1 },
-  { name: "Submarine", size: 3, number: 2 },
+  { name: "Submarine", size: 3, number: 1 },
   { name: "Patrol", size: 2, number: 2 },
 ];
 
@@ -40,30 +40,6 @@ const fleet = SHIPS.reduce(
   ""
 );
 
-// function updateRounds(user, userRound, userBoard) {
-//   let document;
-//   db.collection("rounds")
-//     .get()
-//     .then((response) => {
-//       document = response.docs.find((doc) => doc.id === docRef);
-//     })
-//     .then(() => {
-//       const otherUser = Object.keys(document.data()).find((el) => el != user);
-//       db.collection("rounds")
-//         .doc(document.id)
-//         .update({
-//           [user]: {
-//             round: userRound,
-//             board: userBoard,
-//           },
-//           [otherUser]: {
-//             round: 5 - userRound,
-//             board: document.data()[otherUser].board,
-//           },
-//         });
-//     });
-// }
-
 function setupBoard(data) {
   const fieldArray = [];
   for (field in data) {
@@ -83,14 +59,13 @@ function checkMarkedCell() {
     if (checked) {
       this.classList.toggle("fa-check");
       fieldsArray.splice(i, 1);
-      console.log(setData(fieldsArray));
       if (fieldsArray.length === 0) alert("There is no more ships");
     } else {
       this.classList.toggle("fa-times-circle-o");
     }
     yourRounds--;
     counter.innerText = `You have ${yourRounds} turns`;
-    if (yourRounds === 0) resetCounter().then(() => getCounter(currentUser));
+    if (yourRounds === 0) alert('You won!');
   } else {
     playingBoard.style.pointerEvents = "none";
   }
@@ -156,8 +131,14 @@ function setData(table) {
 
 function fillFleet(cells, board) {
   const boardArray = Object.values(board);
-  console.log("fillFleet -> boardArray", boardArray)
-  boardArray.forEach(coords => [...cells].find(cell => cell.dataset.row == coords.x && cell.dataset.column == coords.y).classList.add('fa-check'));
+  boardArray.forEach((coords) =>
+    [...cells]
+      .find(
+        (cell) =>
+          cell.dataset.row == coords.x && cell.dataset.column == coords.y
+      )
+      .classList.add("fa-check")
+  );
 }
 
 function setGame(user) {
@@ -169,11 +150,9 @@ function setGame(user) {
         const userBoard = changes.find(
           (change) => change.doc.data().user_email === user.email
         );
-        console.log("setGame -> userBoard", userBoard);
         const otherUserBoard = changes.find(
           (change) => change.doc.data().user_email !== user.email
         );
-        console.log("setGame -> otherUserBoard", otherUserBoard);
 
         const userBoardData = userBoard.doc.data();
         const otherUserBoardData = otherUserBoard.doc.data();
@@ -192,7 +171,7 @@ function setGame(user) {
               board: otherUserBoardData.board,
             },
           })
-          .then(response => {
+          .then((response) => {
             game.id = response.id;
           })
           .then(() => {
